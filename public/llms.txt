@@ -1,0 +1,2 @@
+# Irina Ichim Studio
+This is the llms.txt file that AI crawlers can use to learn about the site.
