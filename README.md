@@ -9,7 +9,7 @@ Este es el proyecto oficial de **Irina Ichim Studio**, un estudio de diseño y d
 
 ---
 
-## 🚀 Tecnologías Principales (Tech Stack)
+## Tecnologías Principales (Tech Stack)
 
 * **Frontend:** Next.js 16 (App Router) + React 19 + TypeScript.
 * **Estilos:** Tailwind CSS v4 + shadcn/ui + Framer Motion.
@@ -19,7 +19,7 @@ Este es el proyecto oficial de **Irina Ichim Studio**, un estudio de diseño y d
 
 ---
 
-## 🛠️ Desarrollo Local (Quick Start)
+## Desarrollo Local (Quick Start)
 
 ### 1. Variables de Entorno
 Asegúrate de copiar tu configuración en el archivo [.env](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/.env):
@@ -53,7 +53,7 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ---
 
-## 🔄 Flujo de Trabajo (Git & GitHub)
+## Flujo de Trabajo (Git & GitHub)
 
 Para asegurar la calidad y estabilidad del despliegue en Railway, seguimos estas reglas:
 * **Rama `develop` (Staging):** Todos los desarrollos inician y se integran aquí.
@@ -65,9 +65,9 @@ Para asegurar la calidad y estabilidad del despliegue en Railway, seguimos estas
 
 ---
 
-## 📂 Estructura de Documentación
+## Estructura de Documentación
 
-* 📕 **Especificaciones de Diseño y Accesibilidad:** [design-system-and-accessibility.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/specs/design-system-and-accessibility.md) (WCAG AAA/AA).
-* 📝 **Estado de Trabajo Local:** [docs/current-state.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/current-state.md).
-* 📋 **Tareas Pendientes (Backlog):** [docs/todo.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/todo.md).
-* 📘 **Guía de Dependencias (Zod & Prisma):** [docs/dependencies.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/dependencies.md).
+* **Especificaciones de Diseño y Accesibilidad:** [design-system-and-accessibility.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/specs/design-system-and-accessibility.md) (WCAG AAA/AA).
+* **Estado de Trabajo Local:** [docs/current-state.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/current-state.md).
+* **Tareas Pendientes (Backlog):** [docs/todo.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/todo.md).
+* **Guía de Dependencias (Zod & Prisma):** [docs/dependencies.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/dependencies.md).
