@@ -1,0 +1,46 @@
+name: Integración Continua (CI)
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate:
+    name: Validar Código y Construcción
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar Código (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar Dependencias
+        run: npm ci
+
+      - name: Ejecutar Análisis Estático (Linter)
+        run: npm run lint
+
+      - name: Ejecutar Compilación de Prueba (Build / Typecheck)
+        run: npm run build
+
+      - name: Ejecutar Agente de Validación (Opcional)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -n "$GEMINI_API_KEY" ]; then
+            echo "Clave de API de Gemini detectada. Ejecutando agente de validación..."
+            npm run verify
+          else
+            echo "Advertencia: GEMINI_API_KEY no está configurada como Secret en GitHub. Saltando validación de IA local."
+          fi
+        shell: bash

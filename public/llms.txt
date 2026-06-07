@@ -1,2 +1,21 @@
 # Irina Ichim Studio
-This is the llms.txt file that AI crawlers can use to learn about the site.
+
+Este es el archivo de descripción del proyecto diseñado específicamente para que los agentes de IA y crawlers semánticos puedan comprender la arquitectura y los detalles del sitio web.
+
+## 🚀 Información General
+* **Nombre:** Irina Ichim Studio
+* **Propósito:** Estudio profesional de diseño y desarrollo de interfaces web premium a medida.
+* **Estándar de Accesibilidad:** Conforme con las pautas WCAG 2.1/2.2 en nivel AAA (contraste mínimo de 7:1, accesibilidad por teclado completa, reducción de movimiento).
+* **Idioma principal:** Español de España (Castellano).
+
+## 🛠️ Stack Tecnológico
+* **Core:** Next.js 16 (App Router) y React 19 con Server Components por defecto.
+* **Estilos:** Tailwind CSS v4 para rendimiento y control del sistema de diseño en OKLCH.
+* **Capa de Datos:** PostgreSQL con Prisma ORM e implementaciones Singleton de conexión.
+* **Validación de Entorno:** Esquemas fuertemente tipados con Zod en el arranque del servidor.
+
+## 📂 Estructura del Sitio
+* `/` - Página de inicio (Landing page interactiva).
+* `/api/` - Puntos de entrada para servicios backend y persistencia.
+* `/sitemap.xml` - Sitemap dinámico de páginas indexables.
+* `/robots.txt` - Configuración de indexación de rastreadores.

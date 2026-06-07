@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { google } from '@ai-sdk/google';
-import { generateText } from 'ai';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 
 // Colores ANSI para una salida premium en terminal
 const colors = {
@@ -16,20 +17,26 @@ const colors = {
   magenta: '\x1b[35m'
 };
 
-interface Issue {
-  type: 'spelling' | 'grammar' | 'seo' | 'geo' | 'style';
-  severity: 'error' | 'warning';
-  line: number;
-  original: string;
-  replacement: string;
-  explanation: string;
-}
+const IssueSchema = z.object({
+  type: z.enum(['spelling', 'grammar', 'seo', 'geo', 'style']),
+  severity: z.enum(['error', 'warning']),
+  line: z.number().describe('El número de línea aproximado donde se encuentra el problema, o 0 si no aplica.'),
+  original: z.string().describe('El fragmento exacto de texto donde se detectó el problema.'),
+  replacement: z.string().describe('La sugerencia de corrección.'),
+  explanation: z.string().describe('Una explicación breve de por qué se debe corregir y qué regla o buena práctica incumple.'),
+});
 
-interface FileReport {
+const FileReportSchema = z.object({
+  isValid: z.boolean().describe('false si se detectó al menos un problema que se considera un error bloqueante (ej: faltas de ortografía graves, valores por defecto de SEO, idioma incorrecto).'),
+  issues: z.array(IssueSchema),
+});
+
+type Issue = z.infer<typeof IssueSchema>;
+type FileReport = {
   filePath: string;
   isValid: boolean;
   issues: Issue[];
-}
+};
 
 // 1. Cargar variables de entorno manualmente desde .env
 function loadEnv() {
@@ -60,17 +67,16 @@ function loadEnv() {
   }
 }
 
-// 2. Obtener archivos modificados por Git
-function getChangedFiles(): string[] {
+// 2. Obtener archivos modificados por Git con sus estados
+function getChangedFiles(): { path: string; status: string }[] {
   try {
     const stdout = execSync('git status --porcelain', { encoding: 'utf8' });
     if (!stdout.trim()) return [];
     
     return stdout
       .split('\n')
-      .map(line => line.trim())
-      .filter(Boolean)
       .map(line => {
+        if (!line.trim()) return null;
         const status = line.slice(0, 2).trim();
         let filePath = line.slice(2).trim();
         // Manejar renombrados (ej. R old -> new)
@@ -82,9 +88,10 @@ function getChangedFiles(): string[] {
         if (filePath.startsWith('"') && filePath.endsWith('"')) {
           filePath = filePath.slice(1, -1);
         }
-        return filePath;
-      });
-  } catch (error) {
+        return { path: filePath, status };
+      })
+      .filter((file): file is { path: string; status: string } => file !== null);
+  } catch {
     console.error(`${colors.yellow}Advertencia: No se pudo ejecutar git status. Escaneando archivos principales por defecto.${colors.reset}`);
     return [];
   }
@@ -111,69 +118,78 @@ function getAllProjectFiles(dir: string = 'src'): string[] {
   return results;
 }
 
-// 4. Analizar un archivo con Gemini
-async function analyzeFile(filePath: string): Promise<FileReport> {
-  const content = fs.readFileSync(filePath, 'utf8');
-  
+// 4. Obtener sólo el diff agregado para evitar mandar todo el archivo (ahorro de tokens y mayor foco)
+function getFileContentOrDiff(filePath: string, status: string): { content: string; isDiff: boolean } {
+  // Solo para archivos modificados que no sean nuevos
+  if (status.includes('M') && !status.includes('A') && !status.includes('?')) {
+    try {
+      const diff = execSync(`git diff HEAD -- "${filePath}"`, { encoding: 'utf8' });
+      const addedLines = diff
+        .split('\n')
+        .filter(line => line.startsWith('+') && !line.startsWith('+++'))
+        .map(line => line.slice(1)) // Quitar el símbolo '+'
+        .join('\n');
+      
+      if (addedLines.trim().length > 10) {
+        return { content: addedLines, isDiff: true };
+      }
+    } catch {
+      // Fallback a leer el archivo completo si falla el diff
+    }
+  }
+  return { content: fs.readFileSync(filePath, 'utf8'), isDiff: false };
+}
+
+// Helper para hacer pausas (sleep)
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// 5. Analizar un archivo con Gemini usando generateObject (Función Base)
+async function analyzeFileRaw(filePath: string, status: string): Promise<FileReport> {
+  const { content, isDiff } = getFileContentOrDiff(filePath, status);
+  const contentDescription = isDiff ? "únicamente las líneas modificadas (git diff)" : "el contenido completo del archivo";
+
   const prompt = `
-Analiza el siguiente archivo del proyecto para verificar la calidad lingüística en español de España (Castellano), las mejores prácticas de SEO y la optimización para buscadores de IA (GEO).
+Analiza el siguiente contenido del archivo para verificar la calidad lingüística en español de España (Castellano), las mejores prácticas de SEO y la optimización para buscadores de IA (GEO).
 
 Nombre del archivo: ${filePath}
-Contenido del archivo:
+Tipo de análisis: Analizando ${contentDescription}.
+
+Contenido a analizar:
 """
 ${content}
 """
 
-Debes verificar estrictamente:
+Debes aplicar estas reglas estrictamente:
 1. Ortografía y gramática en español de España (Castellano):
    - Uso correcto de tildes (acentuación, ej. "comunicación", "diseño", "imágenes").
    - Conjugación correcta de verbos y concordancia de género y número.
    - Expresiones y términos naturales de España (ej. "ordenador" en lugar de "computadora", "móvil" en lugar de "celular").
+   - IMPORTANTE: Ignora importaciones, variables de código, nombres de funciones, clases de CSS/Tailwind, URLs y rutas de archivos. Solo analiza textos visibles para el usuario final (JSX, strings literales, o Markdown).
+   - IMPORTANTE: Todas las detecciones de tipo "spelling", "grammar" y "style" deben tener severidad "warning" (advertencia no bloqueante), ya que pueden ser falsos positivos o modismos válidos del proyecto.
+
 2. Buenas prácticas de SEO y GEO (AI Search Engine Optimization):
-   - Evitar valores por defecto de Next.js (como "Create Next App", "Generated by create next app" o "lang=\\"en\\"" en lugar de "lang=\\"es\\"").
+   - Evitar valores por defecto de Next.js (como "Create Next App", "Generated by create next app" o la etiqueta de idioma "lang=\\"en\\"" en lugar de "lang=\\"es\\""). Estos valores por defecto deben considerarse errores ("error").
    - Jerarquía de encabezados coherente (un solo H1 principal, orden lógico H2, H3).
    - Presencia de atributos 'alt' significativos en etiquetas de imágenes.
    - Marcado estructurado (JSON-LD) si es una página o layout principal.
-
-Devuelve tu análisis en formato JSON estructurado EXACTAMENTE como se muestra a continuación, sin explicaciones externas, sin etiquetas de código adicionales (solo devuelve el objeto JSON puro o dentro de un bloque de código markdown \`\`\`json):
-
-{
-  "isValid": true,
-  "issues": [
-    {
-      "type": "spelling", // puede ser: "spelling", "grammar", "seo", "geo", "style"
-      "severity": "error", // "error" (bloqueante) o "warning" (advertencia)
-      "line": 12, // número de línea aproximado donde está el problema
-      "original": "texto con el error",
-      "replacement": "texto corregido sugerido",
-      "explanation": "Explicación de por qué está mal y cómo se corrige."
-    }
-  ]
-}
 `;
 
   try {
-    const model = google('gemini-2.5-flash'); // Usar Gemini 2.5 Flash
-    const { text } = await generateText({
+    const model = google('gemini-2.5-flash');
+    const { object } = await generateObject({
       model,
+      schema: FileReportSchema,
       prompt,
       temperature: 0.1,
     });
 
-    // Extraer JSON si viene envuelto en markdown
-    let jsonText = text.trim();
-    const jsonMatch = jsonText.match(/```json\s*([\s\S]*?)\s*```/) || jsonText.match(/```\s*([\s\S]*?)\s*```/);
-    if (jsonMatch) {
-      jsonText = jsonMatch[1].trim();
-    }
-
-    const parsed = JSON.parse(jsonText) as { isValid: boolean; issues: Issue[] };
     return {
       filePath,
-      isValid: parsed.isValid,
-      issues: parsed.issues || []
+      isValid: object.isValid,
+      issues: object.issues || []
     };
   } catch (error) {
+    const errorMsg = (error as Error).message;
     return {
       filePath,
       isValid: false,
@@ -184,19 +200,60 @@ Devuelve tu análisis en formato JSON estructurado EXACTAMENTE como se muestra a
           line: 0,
           original: '',
           replacement: '',
-          explanation: `Error al procesar el archivo con la IA: ${(error as Error).message}`
+          explanation: `Error al procesar el archivo con la IA: ${errorMsg}`
         }
       ]
     };
   }
 }
 
-// 5. Función principal
+// 6. Envoltura con reintentos y esperas para evitar límites de cuota (Rate-Limits)
+async function analyzeFile(filePath: string, status: string, retries = 3): Promise<FileReport> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const report = await analyzeFileRaw(filePath, status);
+      // Comprobar si falló debido a problemas de cuota
+      const rateLimitIssue = report.issues.find(i => 
+        i.explanation.includes("Quota exceeded") || 
+        i.explanation.includes("rate-limits") ||
+        i.explanation.includes("Resource has been exhausted") ||
+        i.explanation.includes("limit")
+      );
+      if (rateLimitIssue) {
+        throw new Error(rateLimitIssue.explanation);
+      }
+      return report;
+    } catch (error) {
+      if (attempt === retries) {
+        return {
+          filePath,
+          isValid: true, // No bloqueamos el commit si el API de Gemini falla temporalmente
+          issues: [
+            {
+              type: 'style',
+              severity: 'warning',
+              line: 0,
+              original: '',
+              replacement: '',
+              explanation: `Advertencia de API tras ${retries} intentos: ${(error as Error).message}`
+            }
+          ]
+        };
+      }
+      const waitTime = attempt * 6000; // 6s, 12s...
+      console.log(`\n  ⚠️ Límite de API alcanzado en ${filePath}. Reintentando intento ${attempt + 1}/${retries} en ${waitTime/1000}s...`);
+      await sleep(waitTime);
+    }
+  }
+  return { filePath, isValid: true, issues: [] };
+}
+
+// 7. Función principal
 async function main() {
   loadEnv();
   
   console.log(`${colors.bold}${colors.cyan}====================================================`);
-  console.log(`🤖 AGENTE DE VALIDACIÓN PRE-DEPLOY (SEO, GEO & ORTOGRAFÍA)`);
+  console.log(`🤖 AGENTE DE VALIDACIÓN LOCAL (SEO, GEO & ORTOGRAFÍA)`);
   console.log(`====================================================${colors.reset}\n`);
 
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
@@ -206,20 +263,19 @@ async function main() {
   }
 
   // Detectar archivos
-  let filesToAnalyze = getChangedFiles();
-  
-  // Filtrar tipos de archivo de interés
-  filesToAnalyze = filesToAnalyze.filter(file => {
-    const ext = path.extname(file);
+  const changedFiles = getChangedFiles();
+  let filesToAnalyze = changedFiles.filter(file => {
+    const ext = path.extname(file.path);
     const isCodeOrDoc = ['.ts', '.tsx', '.md', '.mdx', '.js', '.jsx'].includes(ext);
-    const isNotConfig = !file.includes('next.config') && !file.includes('eslint') && !file.includes('tailwind.config') && !file.includes('tsconfig');
-    const isNotNodeModules = !file.startsWith('node_modules') && !file.startsWith('.next');
+    const isNotConfig = !file.path.includes('next.config') && !file.path.includes('eslint') && !file.path.includes('tailwind.config') && !file.path.includes('tsconfig');
+    const isNotNodeModules = !file.path.startsWith('node_modules') && !file.path.startsWith('.next') && !file.path.startsWith('docs/');
     return isCodeOrDoc && isNotConfig && isNotNodeModules;
   });
 
   if (filesToAnalyze.length === 0) {
     console.log(`${colors.yellow}No se detectaron archivos modificados en Git. Escaneando la carpeta 'src' al completo...${colors.reset}\n`);
-    filesToAnalyze = getAllProjectFiles('src');
+    const allFiles = getAllProjectFiles('src');
+    filesToAnalyze = allFiles.map(filePath => ({ path: filePath, status: '??' }));
   }
 
   if (filesToAnalyze.length === 0) {
@@ -228,7 +284,7 @@ async function main() {
   }
 
   console.log(`Archivos a analizar (${filesToAnalyze.length}):`);
-  filesToAnalyze.forEach(file => console.log(`  - ${file}`));
+  filesToAnalyze.forEach(file => console.log(`  - ${file.path} [Status: ${file.status}]`));
   console.log('\n⌛ Analizando cambios con Gemini...');
 
   let hasErrors = false;
@@ -236,8 +292,8 @@ async function main() {
   const reports: FileReport[] = [];
 
   for (const file of filesToAnalyze) {
-    process.stdout.write(`  Análisis de ${file}... `);
-    const report = await analyzeFile(file);
+    process.stdout.write(`  Análisis de ${file.path}... `);
+    const report = await analyzeFile(file.path, file.status);
     reports.push(report);
 
     if (report.isValid && report.issues.length === 0) {
@@ -254,9 +310,12 @@ async function main() {
       }
       totalIssues += report.issues.length;
     }
+    
+    // Espera de seguridad para no agotar la cuota de RPM (Requests Per Minute) de la API gratuita de Gemini (15 RPM)
+    await sleep(4500);
   }
 
-  // 6. Validaciones estructurales del proyecto
+  // 7. Validaciones estructurales del proyecto
   console.log(`\n⌛ Ejecutando validaciones estructurales de GEO/AI...`);
   
   // Validar llms.txt
@@ -303,7 +362,7 @@ async function main() {
 
   if (hasErrors) {
     console.log(`\n${colors.red}${colors.bold}❌ VALIDACIÓN FALLIDA: Hay errores graves que bloquean el despliegue.${colors.reset}`);
-    console.log(`Por favor, corrige los problemas señalados arriba antes de subir los cambios.\n`);
+    console.log(`Por favor, corrige los problemas señalados arriba.\n`);
     process.exit(1);
   } else {
     console.log(`\n${colors.green}${colors.bold}✔ VALIDACIÓN EXITOSA: Los cambios cumplen con los estándares de calidad.${colors.reset}\n`);

@@ -1,0 +1,30 @@
+Frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/app/**/*'
+      - any-glob-to-any-file: 'src/components/**/*'
+      - any-glob-to-any-file: 'public/**/*'
+      - any-glob-to-any-file: 'src/frontend-rules.md'
+
+Backend:
+  - changed-files:
+      - any-glob-to-any-file: 'prisma/**/*'
+      - any-glob-to-any-file: 'src/lib/db.ts'
+      - any-glob-to-any-file: 'src/app/api/**/*'
+
+DevOps:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
+      - any-glob-to-any-file: 'package.json'
+      - any-glob-to-any-file: 'next.config.ts'
+
+A11y (Accessibility):
+  - changed-files:
+      - any-glob-to-any-file: 'specs/design-system-and-accessibility.md'
+      - any-glob-to-any-file: 'src/components/ui/skip-link.tsx'
+
+Documentation:
+  - changed-files:
+      - any-glob-to-any-file: 'docs/**/*'
+      - any-glob-to-any-file: 'README.md'
+      - any-glob-to-any-file: 'CLAUDE.md'
+      - any-glob-to-any-file: 'copilot-instructions.md'

@@ -1,0 +1,21 @@
+name: "PR Labeler"
+
+on:
+  pull_request_target:
+    types: [opened, synchronized]
+
+jobs:
+  label:
+    name: Auto-Etiquetar PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Asignar Etiquetas según Cambios
+        uses: actions/labeler@v5
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: ".github/labeler.yml"
+          sync-labels: true
