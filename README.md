@@ -1,5 +1,10 @@
 # Irina Ichim Studio
 
+[![Integración Continua](https://github.com/Irina-Ichim/Irina-Ichim-Studio/actions/workflows/ci.yml/badge.svg)](https://github.com/Irina-Ichim/Irina-Ichim-Studio/actions/workflows/ci.yml)
+[![GitHub issues](https://img.shields.io/github/issues/Irina-Ichim/Irina-Ichim-Studio?style=flat-square&color=blue)](https://github.com/Irina-Ichim/Irina-Ichim-Studio/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Irina-Ichim/Irina-Ichim-Studio?style=flat-square&color=green)](https://github.com/Irina-Ichim/Irina-Ichim-Studio/pulls)
+[![Accesibilidad: WCAG AAA](https://img.shields.io/badge/Accesibilidad-WCAG%20AAA-brightgreen?style=flat-square)](specs/design-system-and-accessibility.md)
+
 Este es el proyecto oficial de **Irina Ichim Studio**, un estudio de diseño y desarrollo web especializado en interfaces de usuario interactivas, de alto rendimiento y accesibles bajo el estándar **WCAG AAA**.
 
 ---

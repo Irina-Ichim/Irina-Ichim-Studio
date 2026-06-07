@@ -6,10 +6,12 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
-// Parsear las variables de entorno de forma segura
+const isCI = process.env.CI === "true";
+
+// Parsear las variables de entorno de forma segura (con fallbacks ficticios en entorno CI/build de GitHub)
 const parsed = envSchema.safeParse({
-  DATABASE_URL: process.env.DATABASE_URL,
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  DATABASE_URL: process.env.DATABASE_URL || (isCI ? "postgresql://postgres:postgres@localhost:5432/db" : undefined),
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || (isCI ? "mock-gemini-key-for-ci" : undefined),
   NODE_ENV: process.env.NODE_ENV,
 });
 
