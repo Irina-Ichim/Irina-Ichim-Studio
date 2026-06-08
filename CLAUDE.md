@@ -25,7 +25,7 @@ Este archivo define las directivas generales del proyecto. Para el desarrollo en
 
 Para detalles completos, consulta [docs/workflow.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/workflow.md):
 * **Ramas:** Todo el desarrollo empieza desde la rama `develop` (staging). La rama `main` (producción) solo recibe actualizaciones mediante Pull Request desde `develop`.
-* **Issues:** El título de cada issue en GitHub debe seguir estrictamente el formato `#XX - [Área] Descripción` (ej: `#01 - [Frontend] Implementar SkipLink`). Las descripciones deben detallar requisitos y aceptación sin volcar código fuente.
+* **Issues:** El título de cada issue en GitHub debe seguir estrictamente el formato `#XX - [Área] Descripción` (ej: `#01 - [Frontend] Implementar SkipLink`). Las descripciones deben detallar requisitos y aceptación sin volcar código fuente. Al crearlas mediante CLI, es obligatorio asignarlas al desarrollador (`--assignee "@me"`) y validar/crear previamente las etiquetas correspondientes si no existen en el repositorio.
 
 
 ---

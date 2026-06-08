@@ -7,3 +7,4 @@
 - Todo texto visible de interfaz debe estar redactado en **Español de España (Castellano)** con acentuación y ortografía correctas.
 - Todo desarrollo de UI debe alinearse con el estándar de accesibilidad **WCAG AAA/AA** definido en [design-system-and-accessibility.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/specs/design-system-and-accessibility.md) (contraste 7:1, focos claros, reducción de movimiento y etiquetas ARIA).
 - Nunca expongas datos sensibles; lee credenciales de APIs y bases de datos usando variables en `.env`.
+- Al crear Issues en GitHub mediante el CLI `gh`, es obligatorio asignar la tarea al desarrollador (`--assignee "@me"`) y validar si la etiqueta asociada existe. Si la etiqueta no existe en el repositorio remoto, debe crearse previamente (`gh label create <nombre> --color <color>`) antes de poder asociarla a la issue.
