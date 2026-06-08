@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "verify": "tsx agents/verify-changes.ts",
+    "audit": "tsx agents/run-audits.ts",
     "prepare": "husky"
   },
   "dependencies": {
