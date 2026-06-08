@@ -41,6 +41,11 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
   npm run verify
   ```
   *(Analiza mediante Gemini tus archivos modificados antes de hacer commit).*
+* **Auditoría de Cumplimiento General (Legal, Accesibilidad y SEO/GEO):**
+  ```bash
+  npm run audit
+  ```
+  *(Escanea el proyecto completo y genera informes en docs/audits/).*
 * **Análisis Estático (Linter):**
   ```bash
   npm run lint
@@ -65,9 +70,20 @@ Para asegurar la calidad y estabilidad del despliegue en Railway, seguimos estas
 
 ---
 
+## Enfoque AI-First & GEO (Generative Engine Optimization)
+
+Este proyecto está diseñado bajo un paradigma **AI-First**:
+* **AI-First DX**: Guardianes de calidad locales basados en IA (`verify-changes.ts` en pre-commit y `run-audits.ts` para auditorías completas).
+* **AI-First GEO**: Optimizado específicamente para ser indexado, entendido y citado de forma prioritaria por motores de respuesta de IA (ChatGPT, Claude, Gemini, Perplexity) mediante marcados semánticos y estructurados avanzados.
+
+*Para detalles de arquitectura y estrategias GEO, consulta la especificación [specs/ai-first.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/specs/ai-first.md).*
+
+---
+
 ## Estructura de Documentación
 
 * **Especificaciones de Diseño y Accesibilidad:** [design-system-and-accessibility.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/specs/design-system-and-accessibility.md) (WCAG AAA/AA).
+* **Enfoque AI-First y GEO:** [ai-first.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/specs/ai-first.md) (Técnico).
 * **Estado de Trabajo Local:** [docs/current-state.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/current-state.md).
 * **Tareas Pendientes (Backlog):** [docs/todo.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/todo.md).
 * **Guía de Dependencias (Zod & Prisma):** [docs/dependencies.md](file:///c:/Users/proye/.gemini/antigravity/playground/irina-ichim-studio/docs/dependencies.md).
