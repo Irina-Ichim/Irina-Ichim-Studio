@@ -9,7 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-serif);
+  --font-serif: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -39,16 +40,147 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-pink: var(--pink);
+  --color-pink-bright: var(--pink-bright);
+  --color-pink-dark: var(--pink-dark);
+  --color-text: var(--text);
+
+  --color-bg-main: var(--color-bg-main);
+  --color-bg-deep: var(--color-bg-deep);
+  --color-bg-soft: var(--color-bg-soft);
+  --color-bg-purple: var(--color-bg-purple);
+  --color-bg-card: var(--color-bg-card);
+
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+
+  --color-accent-primary: var(--color-accent-primary);
+  --color-accent-secondary: var(--color-accent-secondary);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-accent-deep: var(--color-accent-deep);
+
+  --color-pink-soft: var(--color-pink-soft);
+  --color-pink-light: var(--color-pink-light);
+  --color-pink-pale: var(--color-pink-pale);
+
+  --color-gold: var(--color-gold);
+  --color-gold-muted: var(--color-gold-muted);
+  --color-copper: var(--color-copper);
 }
 
 :root {
+  /* ==============================
+     USER COLOR SYSTEM
+     ============================== */
+  --bg: #050507;
+  --bg2: #0a0512;
+
+  --pink: #e0007b;
+  --pink-bright: #ff6aa0;
+  --pink-dark: #a60055;
+
+  --text: #f6dbe7;
+
+  /* ==============================
+     BASE / BACKGROUND
+     ============================== */
+  --color-bg-main: var(--bg);
+  --color-bg-deep: var(--bg2);
+  --color-bg-soft: var(--bg2);
+  --color-bg-purple: #1f082e;
+  --color-bg-card: var(--bg2);
+
+  /* ==============================
+     TEXT
+     ============================== */
+  --color-text-primary: var(--text);
+  --color-text-secondary: #b8b8bc;
+  --color-text-muted: #7d7d7e;
+
+  /* ==============================
+     BRAND / MAGENTA
+     ============================== */
+  --color-accent-primary: var(--pink);
+  --color-accent-secondary: var(--pink-bright);
+  --color-accent-strong: var(--pink-bright);
+  --color-accent-deep: var(--pink-dark);
+
+  /* ==============================
+     SOFT PINKS
+     ============================== */
+  --color-pink-soft: var(--pink-bright);
+  --color-pink-light: var(--pink-bright);
+  --color-pink-pale: var(--pink);
+
+  /* ==============================
+     GOLD / TECH DETAILS
+     ============================== */
+  --color-gold: #bc8d43;
+  --color-gold-muted: #b98a43;
+  --color-copper: #a86656;
+
+  /* ==============================
+     BORDERS / LINES
+     ============================== */
+  --color-border-soft: rgba(240, 192, 216, 0.16);
+  --color-border-medium: rgba(240, 192, 216, 0.28);
+  --color-border-gold: rgba(188, 141, 67, 0.45);
+
+  /* ==============================
+     GRADIENTS
+     ============================== */
+  --gradient-bg-page:
+    radial-gradient(circle at 70% 20%, rgba(224, 0, 123, 0.15), transparent 34%),
+    radial-gradient(circle at 80% 55%, rgba(31, 8, 46, 0.35), transparent 38%),
+    linear-gradient(180deg, #050507 0%, #0a0512 48%, #050507 100%);
+
+  --gradient-hero-glow:
+    radial-gradient(circle at 68% 42%, rgba(224, 0, 123, 0.25), transparent 34%),
+    radial-gradient(circle at 78% 65%, rgba(188, 141, 67, 0.15), transparent 42%);
+
+  --gradient-button:
+    linear-gradient(135deg, #ff6aa0 0%, #e0007b 48%, #3a0b4c 100%);
+
+  --gradient-card:
+    linear-gradient(180deg, rgba(10, 5, 18, 0.92), rgba(5, 5, 7, 0.96));
+
+  /* ==============================
+     SHADOWS / GLOWS
+     ============================== */
+  --shadow-card:
+    0 24px 80px rgba(0, 0, 0, 0.42);
+
+  --shadow-magenta:
+    0 0 40px rgba(224, 72, 112, 0.32);
+
+  --shadow-gold:
+    0 0 24px rgba(188, 141, 67, 0.24);
+
+  /* ==============================
+     UI
+     ============================== */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 2rem;
+
+  --transition-fast: 180ms ease;
+  --transition-base: 260ms ease;
+  --transition-slow: 480ms ease;
+
+  /* Fallback standard theme definitions for light mode */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -84,37 +216,37 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.80 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: var(--color-bg-main);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-bg-card);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-bg-purple);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-accent-primary);
+  --primary-foreground: var(--color-text-primary);
+  --secondary: var(--color-bg-deep);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-bg-purple);
+  --muted-foreground: var(--color-text-muted);
+  --accent: var(--color-gold);
+  --accent-foreground: var(--color-bg-main);
   --destructive: oklch(0.78 0.15 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: var(--color-border-soft);
+  --input: var(--color-border-medium);
+  --ring: var(--color-accent-primary);
+  --chart-1: var(--color-accent-primary);
+  --chart-2: var(--color-accent-secondary);
+  --chart-3: var(--color-accent-strong);
+  --chart-4: var(--color-pink-soft);
+  --chart-5: var(--color-gold);
+  --sidebar: var(--color-bg-main);
+  --sidebar-foreground: var(--color-text-primary);
+  --sidebar-primary: var(--color-accent-primary);
+  --sidebar-primary-foreground: var(--color-text-primary);
+  --sidebar-accent: var(--color-bg-card);
+  --sidebar-accent-foreground: var(--color-text-primary);
+  --sidebar-border: var(--color-border-soft);
+  --sidebar-ring: var(--color-accent-primary);
 }
 
 @layer base {
@@ -138,4 +270,185 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+.bg-keys-light {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='6' y='9' width='108' height='104' rx='14' fill='black' fill-opacity='0.02'/%3E%3Crect x='6' y='6' width='108' height='104' rx='14' stroke='black' stroke-width='1' stroke-opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+.bg-keys-dark {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='6' y='9' width='108' height='104' rx='14' fill='black' fill-opacity='0.5'/%3E%3Crect x='6' y='6' width='108' height='104' rx='14' stroke='white' stroke-width='1' stroke-opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+@keyframes key-pulse-light {
+  0%, 100% { opacity: 0; transform: scale(0.97); }
+  40%, 60% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes key-pulse-dark {
+  0%, 100% { opacity: 0; transform: scale(0.95); }
+  40%, 60% { opacity: 1; transform: scale(1); }
+}
+
+
+
+/* Clases de brillo para las teclas iluminadas (modo claro) */
+.key-glow-light {
+  background: radial-gradient(ellipse at 40% 30%, rgba(255,255,255,0.9) 0%, rgba(220,220,240,0.3) 60%, transparent 100%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.9), 0 0 18px 4px rgba(200,200,255,0.08);
+  animation: key-pulse-light var(--key-duration, 4s) ease-in-out var(--key-delay, 0s) infinite;
+}
+
+/* Clases de brillo para las teclas iluminadas (modo oscuro — base) */
+.key-glow-dark {
+  animation: key-pulse-dark var(--key-duration, 4s) ease-in-out var(--key-delay, 0s) infinite;
+}
+
+/* Variantes de color para modo oscuro */
+.key-glow-indigo {
+  background: radial-gradient(ellipse at 40% 30%, rgba(99,102,241,0.18) 0%, transparent 70%);
+  box-shadow: 0 0 20px 6px rgba(99,102,241,0.18);
+}
+
+.key-glow-purple {
+  background: radial-gradient(ellipse at 40% 30%, rgba(168,85,247,0.15) 0%, transparent 70%);
+  box-shadow: 0 0 20px 6px rgba(168,85,247,0.15);
+}
+
+.key-glow-cyan {
+  background: radial-gradient(ellipse at 40% 30%, rgba(34,211,238,0.12) 0%, transparent 70%);
+  box-shadow: 0 0 20px 6px rgba(34,211,238,0.12);
+}
+
+.bg-demo {
+  position: absolute;
+  inset: 0;
+  background-image: url("/assests/img/bg-demo.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+/* Halo ambiental de fondo — modo claro: muy sutil, modo oscuro: algo más presente */
+.bg-ambient-magenta {
+  background-color: rgba(174,22,90,0.06);
+}
+
+.dark .bg-ambient-magenta {
+  background-color: rgba(174,22,90,0.10);
+}
+
+/* Tecla inactiva (base sin brillo) */
+.key-inactive {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Colores de letra fantasma dentro de las teclas iluminadas */
+.key-letter-magenta { color: rgba(255, 100, 160, 0.95); }
+.key-letter-indigo  { color: rgba(165, 170, 255, 0.95); }
+.key-letter-purple  { color: rgba(210, 130, 255, 0.95); }
+.key-letter-cyan    { color: rgba(100, 230, 250, 0.95); }
+
+/* Custom utility for vertical writing mode */
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+}
+
+@utility transition-luxe {
+  transition-property: all;
+  transition-duration: 800ms;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@utility text-glow-pink {
+  text-shadow:
+    0 0 8px rgba(232, 68, 124, .5),
+    0 0 16px rgba(255, 106, 160, .4),
+    0 0 32px rgba(194, 32, 107, .3);
+}
+
+@utility bg-ambient-glow-1 {
+  background: radial-gradient(circle at 50% 50%,
+    color-mix(in srgb, var(--pink) 55%, transparent) 0%,
+    color-mix(in srgb, var(--pink) 30%, transparent) 35%,
+    transparent 70%
+  );
+}
+
+@utility bg-ambient-glow-2 {
+  background: radial-gradient(circle at 50% 50%,
+    color-mix(in srgb, var(--pink-dark) 45%, transparent) 0%,
+    color-mix(in srgb, var(--pink-dark) 22%, transparent) 40%,
+    transparent 70%
+  );
+}
+
+@utility bg-ambient-glow-3 {
+  background: radial-gradient(circle at 50% 50%,
+    color-mix(in srgb, var(--pink-bright) 40%, transparent) 0%,
+    color-mix(in srgb, var(--pink-bright) 18%, transparent) 45%,
+    transparent 72%
+  );
+}
+
+/* ==============================
+   AURORA BOREALIS — ::before sobre el hero container
+   ============================== */
+
+@keyframes aurora-shift {
+  0%   { transform: translate(0%, 0%)    scale(1);    opacity: 0.9; }
+  25%  { transform: translate(3%, -5%)   scale(1.04); opacity: 1;   }
+  50%  { transform: translate(-4%, -8%)  scale(0.97); opacity: 0.95;}
+  75%  { transform: translate(5%, -3%)   scale(1.03); opacity: 1;   }
+  100% { transform: translate(0%, 0%)    scale(1);    opacity: 0.9; }
+}
+
+/* El pseudo-elemento cubre el hero container con el aurora completo.
+   Usamos inset: -20% para que el blur no quede cortado en los bordes. */
+.aurora-hero-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.aurora-hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Fucsia/Ruby brillante — franja superior, todo el ancho */
+    radial-gradient(ellipse 100% 45% at 50% 12%,
+      rgba(255, 106, 160, 0.75) 0%,
+      rgba(224, 0, 123, 0.45) 40%,
+      transparent 65%
+    ),
+    /* Oro Constelación — esquina superior-derecha */
+    radial-gradient(ellipse 70% 60% at 85% 20%,
+      rgba(188, 141, 67, 0.60) 0%,
+      rgba(188, 141, 67, 0.25) 40%,
+      transparent 65%
+    ),
+    /* Magenta profundo — esquina superior-izquierda */
+    radial-gradient(ellipse 65% 55% at 15% 25%,
+      rgba(224, 0, 123, 0.80) 0%,
+      rgba(58, 11, 76, 0.45) 40%,
+      transparent 65%
+    ),
+    /* Deep Purple Joya — lateral derecho, centro */
+    radial-gradient(ellipse 55% 50% at 92% 55%,
+      rgba(31, 8, 46, 0.85) 0%,
+      rgba(10, 5, 18, 0.60) 45%,
+      transparent 68%
+    ),
+    /* Crimson/Magenta base — franja inferior izquierda */
+    radial-gradient(ellipse 80% 55% at 30% 90%,
+      rgba(166, 0, 85, 0.70) 0%,
+      rgba(58, 11, 76, 0.35) 45%,
+      transparent 70%
+    );
+  filter: blur(45px);
+  animation: aurora-shift 22s ease-in-out infinite alternate;
 }
